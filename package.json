@@ -11,6 +11,7 @@
     "migration:run": "prisma migrate deploy",
     "migration:generate": "npm run dev:load-envs prisma migrate dev",
     "lint": "eslint .",
+    "test:coverage": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand --coverage --collectCoverageFrom='./src/**'",
     "lint:staged": "lint-staged",
     "test": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand",
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
