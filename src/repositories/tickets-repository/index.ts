@@ -15,6 +15,17 @@ async function findTicketByEnrollmentId(enrollmentId: number) {
   });
 }
 
+async function findTicketForBooking(enrollmentId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      enrollmentId
+    },
+    include: {
+      TicketType: true
+    }
+  })
+}
+
 async function createTicket(ticket: CreateTicketParams) {
   return prisma.ticket.create({
     data: ticket,
@@ -61,4 +72,5 @@ export default {
   findTickeyById,
   findTickeWithTypeById,
   ticketProcessPayment,
+  findTicketForBooking
 };
