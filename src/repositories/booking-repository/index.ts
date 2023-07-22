@@ -10,12 +10,23 @@ async function createBooking(roomId: number, userId: number) {
   }
 
 async function getBooking(userId: number) {
-    return prisma.booking.findMany({
+    return prisma.booking.findFirst({
         where: {
             userId
         },
         include:{
             Room: true
+        }
+    })
+}
+
+async function updateBooking(roomId: number, bookingId: number){
+    return prisma.booking.update({
+        where: {
+            id: bookingId
+        },
+        data: {
+            roomId
         }
     })
 }
@@ -44,7 +55,8 @@ const bookingRepository = {
     createBooking,
     getBooking,
     getRoom,
-    changeRoomCapacity
+    changeRoomCapacity,
+    updateBooking
 }
 
 export default bookingRepository
