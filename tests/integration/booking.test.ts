@@ -166,9 +166,9 @@ describe('POST /booking', () => {
 
 describe('PUT /booking', () => {
     it('should respond with status 401 if no token is given', async () => {
-        const response = await server.get('/booking');
+        const response = await server.get('/booking').set('Authorization', `Bearer token`);
 
-        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED)
     });
 
     it('should respond with status 401 if given token is not valid', async () => {
