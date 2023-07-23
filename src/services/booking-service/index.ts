@@ -10,12 +10,23 @@ async function getBooking(userId: number){
     const booking = await bookingRepository.getBooking(userId)
     if (!booking) throw notFoundError()
 
-    return booking
+    const formattedReturn = {
+        id: booking.id,
+        Room: {
+            id: booking.Room.id,
+            name: booking.Room.name,
+            capacity: booking.Room.capacity,
+            hotelId: booking.Room.hotelId,
+            createdAt: booking.Room.createdAt,
+            updatedAt: booking.Room.updatedAt
+        }
+    }
+
+    return formattedReturn
 }
 
 async function createBooking(roomId: number, userId: number) {
     const checkBooking = await bookingRepository.getBooking(userId)
-    console.log(checkBooking)
     if( checkBooking ) throw conflictError('Booking already exists!')
 
     const ticket = await ticketService.getTicketByUserId(userId)
@@ -25,7 +36,6 @@ async function createBooking(roomId: number, userId: number) {
     }
 
     const room = await bookingRepository.getRoom(roomId)
-    console.log(room)
     if(!room) throw notFoundError()
     if(room.capacity === 0) throw fullRoomError()
 
