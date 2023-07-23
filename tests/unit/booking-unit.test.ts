@@ -2,7 +2,7 @@ import bookingRepository from "@/repositories/booking-repository"
 import bookingServices from "@/services/booking-service";
 import { Booking, Room, Ticket, TicketType } from "@prisma/client"
 import { createTicket, createTicketType, createTicketTypeWithHotel } from "../factories";
-import { buildCreateBookingReturn, buildRoomReturn, buildTicketReturn, buildTicketTypeReturn, createBooking } from "../factories/booking-factory";
+import { buildCreateBookingReturn, buildRoomArray, buildRoomReturn, buildTicketReturn, buildTicketTypeReturn, createBooking } from "../factories/booking-factory";
 import ticketsRepository from "@/repositories/tickets-repository";
 import ticketService from "@/services/tickets-service";
 
@@ -155,9 +155,10 @@ describe('booking services unit tests', () => {
         })
         it('should return error 403 if room is full', () => {
             const mockBooking: Booking & { Room: Room } = buildCreateBookingReturn()
-            const mockRoom: Room = buildRoomReturn(0)
+            const mockRoom: Room = buildRoomReturn(1)
             jest.spyOn(bookingRepository, "getBooking").mockResolvedValueOnce(mockBooking)
             jest.spyOn(bookingRepository, "getRoom").mockResolvedValueOnce(mockRoom)
+            jest.spyOn(bookingRepository, 'getBookingsOnRoom').mockResolvedValue([mockBooking])
             const promise = bookingServices.changeBooking(2, 1)
             expect(promise).rejects.toEqual({
                 name: 'fullRoomError',

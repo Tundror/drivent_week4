@@ -81,3 +81,7 @@ export function buildRoomReturn(capacity: number) {
     }
     return room
 }
+
+export function buildRoomArray(room: Room) {
+    return [room]
+}
