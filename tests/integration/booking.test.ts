@@ -95,7 +95,7 @@ describe('GET /booking', () => {
 
     // pegar o booking do usuario OK
     // receber erro 404 quando nao encontra um booking com o userId passado OK
-    // se tudo estiver correto, retorno status 200 e formato especificado (id e room info) OK
+    // se tudo estiver correto, retorno status 200 e formato especificado (id e room info) OKS
 
 // bookingRouter.post('/', authenticateToken, validateBody(bookingSchema), createBooking);
 
