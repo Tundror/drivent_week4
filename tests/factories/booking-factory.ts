@@ -72,7 +72,7 @@ export function buildTicketTypeReturn(isRemote: boolean, includesHotel: boolean)
 
 export function buildRoomReturn(capacity: number) {
     const room: Room = {
-        id: parseInt(faker.random.numeric()),
+        id: 1,
         name: faker.random.numeric(),
         capacity,
         hotelId: parseInt(faker.random.numeric()),

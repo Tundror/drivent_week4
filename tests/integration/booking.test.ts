@@ -165,26 +165,62 @@ describe('POST /booking', () => {
 })
 
 describe('PUT /booking', () => {
-    
+    it('should respond with status 401 if no token is given', async () => {
+        const response = await server.get('/booking');
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 401 if given token is not valid', async () => {
+        const token = faker.lorem.word();
+
+        const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 401 if there is no session for given token', async () => {
+        const userWithoutSession = await createUser();
+        const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+
+        const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    describe('when token is valid', () => {
+        it('should respond with status 404 if there is no booking found', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+            const createdHotel = await createHotel();
+            const createdRoom = await createRoomWithHotelId(createdHotel.id);
+            
+
+            const { status } = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({roomId: createdRoom.id})
+
+            expect(status).toEqual(httpStatus.NOT_FOUND);
+        })
+        it('should respond with status 200 and booking Id if everything ok', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+            const createdHotel = await createHotel();
+            const createdRoom = await createRoomWithHotelId(createdHotel.id);
+            const booking = await createBooking(createdRoom.id, user.id)
+            const createdRoom2 = await createRoomWithHotelId(createdHotel.id);
+            
+
+            const { status, body } = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({roomId: createdRoom2.id})
+
+            expect(status).toEqual(httpStatus.OK);
+            expect(body).toEqual({bookingId: expect.any(Number)})
+        })
+    })
 })
-
-// bookingRouter.post('/', authenticateToken, validateBody(bookingSchema), createBooking);
-
-    // checar se usuario ja tem booking, caso tiver, conflict error OK
-
-    // pegar ticket e ticket type do usuario. OK
-    // se status for !== PAID, nao incluir hotel ou for remoto, retornar erro 403 OK
-
-    // pegar a room com o roomId passado OK
-    // se nao encontrar, erro 404
-    // se encontrar e estiver cheia, erro 403
-
-    // se tudo estiver correto, retorno status 200 e bookingId
 
 // bookingRouter.put('/', authenticateToken, validateBody(bookingSchema), changeBooking)
 
-    // checar booking atual do usuario
-    // se nao achar, erro 404
+    // checar booking atual do usuario OK
+    // se nao achar, erro 404 OK
     // se roomId for igual ao roomId passado, conflict error (usuario esta tentando trocar booking para o mesmo quarto)
 
     // procurar quarto pelo roomId passado
