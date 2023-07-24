@@ -106,9 +106,11 @@ describe('booking services unit tests', () => {
             const mockTicket: Ticket = buildTicketReturn('PAID')
             const mockTicketType: Ticket & { TicketType: TicketType } = buildTicketTypeReturn(false, true)
             const mockRoom: Room = buildRoomReturn(0)
+            const mockBooking: Booking & { Room: Room } = buildCreateBookingReturn()
 
             jest.spyOn(bookingRepository, "getBooking").mockResolvedValueOnce(null)
             jest.spyOn(ticketService, "getTicketByUserId").mockResolvedValueOnce(mockTicket)
+            jest.spyOn(bookingRepository, "getBookingsOnRoom").mockResolvedValueOnce([mockBooking])
             jest.spyOn(ticketsRepository, "findTicketForBooking").mockResolvedValueOnce(mockTicketType)
             jest.spyOn(bookingRepository, "getRoom").mockResolvedValueOnce(mockRoom)
 
@@ -171,15 +173,3 @@ describe('booking services unit tests', () => {
     })
 
 })
-
-// bookingRouter.put('/', authenticateToken, validateBody(bookingSchema), changeBooking)
-
-    // checar booking atual do usuario OK
-    // se nao achar, erro 404 OK
-    // se roomId for igual ao roomId passado, conflict error (usuario esta tentando trocar booking para o mesmo quarto) OK
-
-    // procurar quarto pelo roomId passado OK
-    // se nao achar, erro 404 OK
-    // se encontrar e estiver cheia, erro 403 OK
-
-    // se tudo estiver correto, retorno status 200 e bookingId

@@ -189,6 +189,14 @@ describe('PUT /booking', () => {
     });
 
     describe('when token is valid', () => {
+        it('should respond with status 400 if there is no bookingId in params', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+
+            const { status } = await server.put('/booking').set('Authorization', `Bearer ${token}`)
+
+            expect(status).toEqual(httpStatus.NOT_FOUND);
+        })
         it('should respond with status 404 if there is no booking found', async () => {
             const user = await createUser();
             const token = await generateValidToken(user);
@@ -196,7 +204,7 @@ describe('PUT /booking', () => {
             const createdRoom = await createRoomWithHotelId(createdHotel.id);
             
 
-            const { status } = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({roomId: createdRoom.id})
+            const { status } = await server.put('/booking/1').set('Authorization', `Bearer ${token}`).send({roomId: createdRoom.id})
 
             expect(status).toEqual(httpStatus.NOT_FOUND);
         })
@@ -209,22 +217,10 @@ describe('PUT /booking', () => {
             const createdRoom2 = await createRoomWithHotelId(createdHotel.id);
             
 
-            const { status, body } = await server.put('/booking').set('Authorization', `Bearer ${token}`).send({roomId: createdRoom2.id})
+            const { status, body } = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({roomId: createdRoom2.id})
 
             expect(status).toEqual(httpStatus.OK);
             expect(body).toEqual({bookingId: expect.any(Number)})
         })
     })
 })
-
-// bookingRouter.put('/', authenticateToken, validateBody(bookingSchema), changeBooking)
-
-    // checar booking atual do usuario OK
-    // se nao achar, erro 404 OK
-    // se roomId for igual ao roomId passado, conflict error (usuario esta tentando trocar booking para o mesmo quarto)
-
-    // procurar quarto pelo roomId passado
-    // se nao achar, erro 404
-    // se encontrar e estiver cheia, erro 403
-
-    // se tudo estiver correto, retorno status 200 e bookingId

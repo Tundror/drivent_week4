@@ -1,3 +1,4 @@
+import { badRequestError } from "@/errors/bad-request-error";
 import { AuthenticatedRequest } from "@/middlewares";
 import bookingServices from "@/services/booking-service";
 import { Response } from "express";
@@ -21,9 +22,10 @@ export async function createBooking(req: AuthenticatedRequest, res: Response){
 
 export async function changeBooking(req: AuthenticatedRequest, res: Response){
     const { userId } = req
+    const bookingId = parseInt(req.params.bookingId)
     const { roomId } = req.body
+    if(!bookingId) throw badRequestError('Missing booking id')
 
-    const bookingId = await bookingServices.changeBooking(roomId, userId)
-    console.log(bookingId)
+    await bookingServices.changeBooking(roomId, userId)
     return res.status(httpStatus.OK).json({ bookingId: bookingId })
 }

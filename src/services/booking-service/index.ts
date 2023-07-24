@@ -37,12 +37,11 @@ async function createBooking(roomId: number, userId: number) {
 
     const room = await bookingRepository.getRoom(roomId)
     if(!room) throw notFoundError()
-    if(room.capacity === 0) throw fullRoomError()
+    
+    const capacity = await bookingRepository.getBookingsOnRoom(roomId)
+    if(capacity.length >= room.capacity) throw fullRoomError()
 
     await bookingRepository.createBooking(roomId, userId)
-
-    const newRoomCapacity = room.capacity - 1
-    await bookingRepository.changeRoomCapacity(roomId, newRoomCapacity )
 
     const booking = await bookingRepository.getBooking(userId)
 

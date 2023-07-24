@@ -37,6 +37,11 @@ export function handleApplicationErrors(
       message: err.message,
     });
   }
+  if (err.name === 'badRequestError') {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message,
+    });
+  }
 
   if (err.name === 'UnauthorizedError') {
     return res.status(httpStatus.UNAUTHORIZED).send({
