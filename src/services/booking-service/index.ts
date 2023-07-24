@@ -1,4 +1,4 @@
-import { conflictError, notFoundError } from "@/errors";
+import { conflictError, noBookingError, notFoundError } from "@/errors";
 import { fullRoomError } from "@/errors/full-room-error";
 import bookingRepository from "@/repositories/booking-repository";
 import ticketService from "../tickets-service";
@@ -50,7 +50,7 @@ async function createBooking(roomId: number, userId: number) {
 
 async function changeBooking(roomId: number, userId: number){
     const booking = await bookingRepository.getBooking(userId)
-    if (!booking) throw notFoundError()
+    if (!booking) throw noBookingError('Found no booking for user')
     if (booking.roomId === roomId) throw conflictError('User is already booked in this room')
 
     const room = await bookingRepository.getRoom(roomId)

@@ -48,6 +48,11 @@ export function handleApplicationErrors(
       message: err.message,
     });
   }
+  if (err.name === 'NoBookingError') {
+    return res.status(httpStatus.FORBIDDEN).send({
+      message: err.message,
+    });
+  }
 
   if (err.name === 'NotFoundError') {
     return res.status(httpStatus.NOT_FOUND).send({

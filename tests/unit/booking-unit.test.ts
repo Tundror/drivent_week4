@@ -123,13 +123,13 @@ describe('booking services unit tests', () => {
     })
 
     describe('PUT /booking unit tests', () => {
-        it('should respond with status 404 if there is no booking found', () => {
+        it('should respond with status 403 if there is no booking found', () => {
             jest.spyOn(bookingRepository, "getBooking").mockResolvedValueOnce(null)
 
             const promise = bookingServices.changeBooking(2, 1)
             expect(promise).rejects.toEqual({
-                name: 'NotFoundError',
-                message: 'No result for this search!'
+                name: 'NoBookingError',
+                message: 'Found no booking for user'
             })
         })
 

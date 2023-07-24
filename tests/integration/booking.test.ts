@@ -197,7 +197,7 @@ describe('PUT /booking', () => {
 
             expect(status).toEqual(httpStatus.NOT_FOUND);
         })
-        it('should respond with status 404 if there is no booking found', async () => {
+        it('should respond with status 403 if there is no booking found', async () => {
             const user = await createUser();
             const token = await generateValidToken(user);
             const createdHotel = await createHotel();
@@ -206,7 +206,7 @@ describe('PUT /booking', () => {
 
             const { status } = await server.put('/booking/1').set('Authorization', `Bearer ${token}`).send({roomId: createdRoom.id})
 
-            expect(status).toEqual(httpStatus.NOT_FOUND);
+            expect(status).toEqual(httpStatus.FORBIDDEN);
         })
         it('should respond with status 200 and booking Id if everything ok', async () => {
             const user = await createUser();
